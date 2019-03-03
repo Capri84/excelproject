@@ -1,8 +1,10 @@
+package generators;
+
 import java.util.Random;
 
-class FlatNumGenerator {
+public class FlatNumGenerator {
 
-    static int generateRandomFlatNum() {
+    public static int generateRandomFlatNum() {
         Random random = new Random();
         return random.nextInt(300) + 1;
     }
