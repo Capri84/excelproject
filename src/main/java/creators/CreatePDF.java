@@ -19,7 +19,7 @@ import java.util.logging.Logger;
 
 public class CreatePDF {
 
-    public static final String DEST = "E:/IT learning/Tinkoff/HomeTasks/workbook.pdf";
+    public static final String DEST = System.getProperty("user.dir") + "/workbook.pdf";
     private static final String TABLE_HEADER = "./src/main/resources/table_header.txt";
     private static final int MIN_NUMBER_OF_PEOPLE = 1;
     private static final int MAX_NUMBER_OF_PEOPLE = 30;

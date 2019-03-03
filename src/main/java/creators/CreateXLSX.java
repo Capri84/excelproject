@@ -116,7 +116,7 @@ public class CreateXLSX {
             cell.setCellValue(FlatNumGenerator.generateRandomFlatNum());
         }
 
-        File file = new File("E:/IT learning/Tinkoff/HomeTasks/workbook.xlsx");
+        File file = new File(System.getProperty("user.dir") + "/workbook.xlsx");
 
         FileOutputStream outFile = new FileOutputStream(file);
         workbook.write(outFile);
