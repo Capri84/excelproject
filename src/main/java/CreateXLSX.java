@@ -3,6 +3,7 @@ import java.time.LocalDate;
 import java.time.Period;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.logging.Logger;
 
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellType;
@@ -133,7 +134,7 @@ public class CreateXLSX {
 
         FileOutputStream outFile = new FileOutputStream(file);
         workbook.write(outFile);
-        System.out.println("Created file: " + file.getAbsolutePath());
+        Logger.getLogger(CreateXLSX.class.getName()).info("Файл создан. Путь: " + file.getAbsolutePath());
     }
 
     private static String choose(File f, String src) throws IOException {
