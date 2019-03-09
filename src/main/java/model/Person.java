@@ -41,112 +41,56 @@ public class Person {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
     public String getSurname() {
         return surname;
-    }
-
-    public void setSurname(String surname) {
-        this.surname = surname;
     }
 
     public String getPatronymic() {
         return patronymic;
     }
 
-    public void setPatronymic(String patronymic) {
-        this.patronymic = patronymic;
-    }
-
     public int getAge() {
         return age;
-    }
-
-    public void setAge(int age) {
-        this.age = age;
     }
 
     public String getGender() {
         return gender;
     }
 
-    public void setGender(String gender) {
-        this.gender = gender;
-    }
-
     public LocalDate getDateOfBirth() {
         return dateOfBirth;
-    }
-
-    public void setDateOfBirth(LocalDate dateOfBirth) {
-        this.dateOfBirth = dateOfBirth;
     }
 
     public long getInn() {
         return inn;
     }
 
-    public void setInn(long inn) {
-        this.inn = inn;
-    }
-
     public String getZipCode() {
         return zipCode;
-    }
-
-    public void setZipCode(String zipCode) {
-        this.zipCode = zipCode;
     }
 
     public String getCountry() {
         return country;
     }
 
-    public void setCountry(String country) {
-        this.country = country;
-    }
-
     public String getRegion() {
         return region;
-    }
-
-    public void setRegion(String region) {
-        this.region = region;
     }
 
     public String getCity() {
         return city;
     }
 
-    public void setCity(String city) {
-        this.city = city;
-    }
-
     public String getStreet() {
         return street;
-    }
-
-    public void setStreet(String street) {
-        this.street = street;
     }
 
     public int getHouseNum() {
         return houseNum;
     }
 
-    public void setHouseNum(int houseNum) {
-        this.houseNum = houseNum;
-    }
-
     public int getFlatNum() {
         return flatNum;
-    }
-
-    public void setFlatNum(int flatNum) {
-        this.flatNum = flatNum;
     }
 
     @Override

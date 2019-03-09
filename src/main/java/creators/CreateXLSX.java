@@ -1,6 +1,6 @@
 package creators;
 
-import generators.*;
+import model.Person;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.Row;
@@ -10,11 +10,7 @@ import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import java.io.*;
-import java.time.LocalDate;
-import java.time.Period;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
 import java.util.Scanner;
 import java.util.logging.Logger;
@@ -22,12 +18,11 @@ import java.util.logging.Logger;
 public class CreateXLSX {
 
     public static final String DEST_XLSX = System.getProperty("user.dir") + "/workbook.xlsx";
-    public static int rownum = 0;
-    private static String dobFormatted;
-    public static XSSFWorkbook workbook;
-    public static XSSFSheet sheet;
-    public static Row row;
-    public static Cell cell;
+    private static int rownum = 0;
+    private static XSSFWorkbook workbook;
+    private static XSSFSheet sheet;
+    private static Row row;
+    private static Cell cell;
     private static XSSFCellStyle style;
 
     public static void createXLSX() throws IOException {
@@ -51,66 +46,45 @@ public class CreateXLSX {
         scanner.close();
     }
 
-    public static void fillXLSX(int numOfPeople, String dest) throws IOException {
-        List<String> surnames = new ArrayList<>();
-        for (int j = 0; j < numOfPeople; j++) {
-            surnames.add(choose(new File(ResourcesData.ALL_SURNAMES), ResourcesData.ALL_SURNAMES));
-        }
-
-        for (String surname : surnames) {
-            String name;
-            String patronymic;
-            String gender;
-            if (ResourcesData.getMaleSurnamesList().contains(surname)) {
-                rownum++;
-                name = choose(new File(ResourcesData.NAMES_MALE), ResourcesData.NAMES_MALE);
-                patronymic = choose(new File(ResourcesData.PATRONYMICS_MALE), ResourcesData.PATRONYMICS_MALE);
-                gender = ResourcesData.MALE_GENDER;
-            } else if (ResourcesData.getFemaleSurnamesList().contains(surname)) {
-                rownum++;
-                name = choose(new File(ResourcesData.NAMES_FEMALE), ResourcesData.NAMES_FEMALE);
-                patronymic = choose(new File(ResourcesData.PATRONYMICS_FEMALE), ResourcesData.PATRONYMICS_FEMALE);
-                gender = ResourcesData.FEMALE_GENDER;
-            } else {
-                System.out.println(surname + " " + "Фамилия не найдена в списках");
-                continue;
-            }
+    public static void fillXLSX(String dest) throws IOException {
+        for (Person person : CreatePersons.persons) {
+            rownum++;
             row = sheet.createRow(rownum);
             cell = row.createCell(0, CellType.STRING);
-            cell.setCellValue(name);
+            cell.setCellValue(person.getName());
             cell = row.createCell(1, CellType.STRING);
-            cell.setCellValue(surname);
+            cell.setCellValue(person.getSurname());
             cell = row.createCell(2, CellType.STRING);
-            cell.setCellValue(patronymic);
+            cell.setCellValue(person.getPatronymic());
             cell = row.createCell(3, CellType.NUMERIC);
-            cell.setCellValue(calculateAge(generateDOB(), LocalDate.now()));
+            cell.setCellValue(person.getAge());
             cell = row.createCell(4, CellType.STRING);
-            cell.setCellValue(gender);
+            cell.setCellValue(person.getGender());
             cell = row.createCell(5, CellType.STRING);
-            cell.setCellValue(dobFormatted);
+            cell.setCellValue(person.getDateOfBirth().format(DateTimeFormatter.ofPattern("dd-MM-yyyy")));
             cell = row.createCell(6, CellType.STRING);
-            cell.setCellValue(String.valueOf(InnGenerator.makeINN()));
+            cell.setCellValue(String.valueOf(person.getInn()));
             cell = row.createCell(7, CellType.NUMERIC);
-            cell.setCellValue(ZipGenerator.generateRandomInt());
+            cell.setCellValue(person.getZipCode());
             cell = row.createCell(8, CellType.STRING);
-            cell.setCellValue(choose(new File(ResourcesData.COUNTRIES), ResourcesData.COUNTRIES));
+            cell.setCellValue(person.getCountry());
             cell = row.createCell(9, CellType.STRING);
-            cell.setCellValue(choose(new File(ResourcesData.REGIONS), ResourcesData.REGIONS));
+            cell.setCellValue(person.getRegion());
             cell = row.createCell(10, CellType.STRING);
-            cell.setCellValue(choose(new File(ResourcesData.CITIES), ResourcesData.CITIES));
+            cell.setCellValue(person.getCity());
             cell = row.createCell(11, CellType.STRING);
-            cell.setCellValue(choose(new File(ResourcesData.STREETS), ResourcesData.STREETS));
+            cell.setCellValue(person.getStreet());
             cell = row.createCell(12, CellType.NUMERIC);
-            cell.setCellValue(HouseNumGenerator.generateRandomHouse());
+            cell.setCellValue(person.getHouseNum());
             cell = row.createCell(13, CellType.NUMERIC);
-            cell.setCellValue(FlatNumGenerator.generateRandomFlatNum());
+            cell.setCellValue(person.getFlatNum());
         }
 
-        File file = new File(dest);
+        File file = new File(System.getProperty("user.dir") + "/workbook.xlsx");
 
         FileOutputStream outFile = new FileOutputStream(file);
         workbook.write(outFile);
-        Logger.getLogger(CreateXLSX.class.getName()).info("Файл создан. Путь: " + file.getAbsolutePath());
+        Logger.getLogger(CreateXLSX.class.getName()).info("Файл создан. Путь: " + dest);
     }
 
     private static String choose(File f, String src) throws IOException {
@@ -135,18 +109,6 @@ public class CreateXLSX {
             ex.printStackTrace();
         }
         return linesCount;
-    }
-
-    private static LocalDate generateDOB() {
-        DateOfBirthGenerator dob = new DateOfBirthGenerator(LocalDate.of(1919, 1, 1),
-                LocalDate.of(2019, 1, 1));
-        LocalDate dobDate = dob.nextDate();
-        dobFormatted = dobDate.format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
-        return dobDate;
-    }
-
-    private static int calculateAge(LocalDate birthDate, LocalDate currentDate) {
-        return Period.between(birthDate, currentDate).getYears();
     }
 
     private static XSSFCellStyle createStyleForTitle(XSSFWorkbook workbook) {

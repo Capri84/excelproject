@@ -5,14 +5,10 @@ import com.itextpdf.text.pdf.BaseFont;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
-import generators.*;
+import model.Person;
 
 import java.io.*;
-import java.time.LocalDate;
-import java.time.Period;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
 import java.util.Scanner;
 import java.util.logging.Logger;
@@ -21,10 +17,9 @@ public class CreatePDF {
 
     public static final String DEST_PDF = System.getProperty("user.dir") + "/workbook.pdf";
     private static final String FONT = "./src/main/resources/assets/times.ttf";
-    private static String dobFormatted;
-    public static PdfPTable table;
-    public static Font font;
-    public static Document document;
+    private static PdfPTable table;
+    private static Font font;
+    private static Document document;
 
     public static void createPdf(String dest) throws IOException, DocumentException {
         document = new Document(PageSize.A4.rotate(), 0, 0, 0, 0);
@@ -82,55 +77,22 @@ public class CreatePDF {
         return linesCount;
     }
 
-    private static LocalDate generateDOB() {
-        DateOfBirthGenerator dob = new DateOfBirthGenerator(LocalDate.of(1919, 1, 1),
-                LocalDate.of(2019, 1, 1));
-        LocalDate dobDate = dob.nextDate();
-        dobFormatted = dobDate.format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
-        return dobDate;
-    }
-
-    private static int calculateAge(LocalDate birthDate, LocalDate currentDate) {
-        return Period.between(birthDate, currentDate).getYears();
-    }
-
-    public static void fillPDF(int numOfPeople, String dest) throws IOException, DocumentException {
-        List<String> surnames = new ArrayList<>();
-        for (int j = 0; j < numOfPeople; j++) {
-            surnames.add(choose(new File(ResourcesData.ALL_SURNAMES), ResourcesData.ALL_SURNAMES));
-        }
-
-        for (String surname : surnames) {
-            String name;
-            String patronymic;
-            String gender;
-            if (ResourcesData.getMaleSurnamesList().contains(surname)) {
-                name = choose(new File(ResourcesData.NAMES_MALE), ResourcesData.NAMES_MALE);
-                patronymic = choose(new File(ResourcesData.PATRONYMICS_MALE), ResourcesData.PATRONYMICS_MALE);
-                gender = ResourcesData.MALE_GENDER;
-            } else if (ResourcesData.getFemaleSurnamesList().contains(surname)) {
-                name = choose(new File(ResourcesData.NAMES_FEMALE), ResourcesData.NAMES_FEMALE);
-                patronymic = choose(new File(ResourcesData.PATRONYMICS_FEMALE), ResourcesData.PATRONYMICS_FEMALE);
-                gender = ResourcesData.FEMALE_GENDER;
-            } else {
-                System.out.println(surname + " " + "Фамилия не найдена в списках");
-                continue;
-            }
-
-            table.addCell(new PdfPCell(new Phrase(name, font)));
-            table.addCell(new PdfPCell(new Phrase(surname, font)));
-            table.addCell(new PdfPCell(new Phrase(patronymic, font)));
-            table.addCell(new PdfPCell(new Phrase(String.valueOf(calculateAge(generateDOB(), LocalDate.now())), font)));
-            table.addCell(new PdfPCell(new Phrase(gender, font)));
-            table.addCell(new PdfPCell(new Phrase(dobFormatted, font)));
-            table.addCell(new PdfPCell(new Phrase(String.valueOf(InnGenerator.makeINN()), font)));
-            table.addCell(new PdfPCell(new Phrase(String.valueOf(ZipGenerator.generateRandomInt()), font)));
-            table.addCell(new PdfPCell(new Phrase(choose(new File(ResourcesData.COUNTRIES), ResourcesData.COUNTRIES), font)));
-            table.addCell(new PdfPCell(new Phrase(choose(new File(ResourcesData.REGIONS), ResourcesData.REGIONS), font)));
-            table.addCell(new PdfPCell(new Phrase(choose(new File(ResourcesData.CITIES), ResourcesData.CITIES), font)));
-            table.addCell(new PdfPCell(new Phrase(choose(new File(ResourcesData.STREETS), ResourcesData.STREETS), font)));
-            table.addCell(new PdfPCell(new Phrase(String.valueOf(HouseNumGenerator.generateRandomHouse()), font)));
-            table.addCell(new PdfPCell(new Phrase(String.valueOf(FlatNumGenerator.generateRandomFlatNum()), font)));
+    public static void fillPDF(String dest) throws DocumentException {
+        for (Person person : CreatePersons.persons) {
+            table.addCell(new PdfPCell(new Phrase(person.getName(), CreatePDF.font)));
+            table.addCell(new PdfPCell(new Phrase(person.getSurname(), CreatePDF.font)));
+            table.addCell(new PdfPCell(new Phrase(person.getPatronymic(), CreatePDF.font)));
+            table.addCell(new PdfPCell(new Phrase(String.valueOf(person.getAge()), CreatePDF.font)));
+            table.addCell(new PdfPCell(new Phrase(person.getGender(), CreatePDF.font)));
+            table.addCell(new PdfPCell(new Phrase(person.getDateOfBirth().format(DateTimeFormatter.ofPattern("dd-MM-yyyy")), CreatePDF.font)));
+            table.addCell(new PdfPCell(new Phrase(String.valueOf(person.getInn()), CreatePDF.font)));
+            table.addCell(new PdfPCell(new Phrase(person.getZipCode(), CreatePDF.font)));
+            table.addCell(new PdfPCell(new Phrase(person.getCountry(), CreatePDF.font)));
+            table.addCell(new PdfPCell(new Phrase(person.getRegion(), CreatePDF.font)));
+            table.addCell(new PdfPCell(new Phrase(person.getCity(), CreatePDF.font)));
+            table.addCell(new PdfPCell(new Phrase(person.getStreet(), CreatePDF.font)));
+            table.addCell(new PdfPCell(new Phrase(String.valueOf(person.getHouseNum()), CreatePDF.font)));
+            table.addCell(new PdfPCell(new Phrase(String.valueOf(person.getFlatNum()), CreatePDF.font)));
         }
         document.add(table);
         document.close();
