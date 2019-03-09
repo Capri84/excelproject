@@ -21,39 +21,27 @@ import java.util.logging.Logger;
 
 public class CreateXLSX {
 
-    private static final int MIN_NUMBER_OF_PEOPLE = 1;
-    private static final int MAX_NUMBER_OF_PEOPLE = 30;
-    private static final String MALE_GENDER = "М";
-    private static final String FEMALE_GENDER = "Ж";
-    private static final String TABLE_HEADER = "./src/main/resources/table_header.txt";
-    private static final String ALL_SURNAMES = "./src/main/resources/common/surnames.txt";
-    private static int rownum = 0;
+    public static final String DEST_XLSX = System.getProperty("user.dir") + "/workbook.xlsx";
+    public static int rownum = 0;
     private static String dobFormatted;
+    public static XSSFWorkbook workbook;
+    public static XSSFSheet sheet;
+    public static Row row;
+    public static Cell cell;
+    private static XSSFCellStyle style;
 
-    public static int generateRandomInt() {
-        int diff = MAX_NUMBER_OF_PEOPLE - MIN_NUMBER_OF_PEOPLE;
-        Random random = new Random();
-        return random.nextInt(diff + 1) + MIN_NUMBER_OF_PEOPLE;
+    public static void createXLSX() throws IOException {
+        workbook = new XSSFWorkbook();
+        sheet = workbook.createSheet("Workbook sheet");
+        style = createStyleForTitle(workbook);
+        row = sheet.createRow(rownum);
+
+        createXlsxHeader();
     }
 
-    private static XSSFCellStyle createStyleForTitle(XSSFWorkbook workbook) {
-        XSSFFont font = workbook.createFont();
-        font.setBold(true);
-        XSSFCellStyle style = workbook.createCellStyle();
-        style.setFont(font);
-        return style;
-    }
-
-    public static void readRandLinesFromFile(int numOfPeople) throws IOException {
-        XSSFWorkbook workbook = new XSSFWorkbook();
-        XSSFSheet sheet = workbook.createSheet("Workbook sheet");
-
-        XSSFCellStyle style = createStyleForTitle(workbook);
-        Row row = sheet.createRow(rownum);
-
-        Scanner scanner = new Scanner(new File(TABLE_HEADER));
+    private static void createXlsxHeader() throws FileNotFoundException {
+        Scanner scanner = new Scanner(new File(ResourcesData.TABLE_HEADER));
         int i = 0;
-        Cell cell;
         while (scanner.hasNextLine()) {
             cell = row.createCell(i, CellType.STRING);
             cell.setCellValue(scanner.nextLine());
@@ -61,10 +49,12 @@ public class CreateXLSX {
             i++;
         }
         scanner.close();
+    }
 
+    public static void fillXLSX(int numOfPeople, String dest) throws IOException {
         List<String> surnames = new ArrayList<>();
         for (int j = 0; j < numOfPeople; j++) {
-            surnames.add(choose(new File(ALL_SURNAMES), ALL_SURNAMES));
+            surnames.add(choose(new File(ResourcesData.ALL_SURNAMES), ResourcesData.ALL_SURNAMES));
         }
 
         for (String surname : surnames) {
@@ -75,12 +65,12 @@ public class CreateXLSX {
                 rownum++;
                 name = choose(new File(ResourcesData.NAMES_MALE), ResourcesData.NAMES_MALE);
                 patronymic = choose(new File(ResourcesData.PATRONYMICS_MALE), ResourcesData.PATRONYMICS_MALE);
-                gender = MALE_GENDER;
+                gender = ResourcesData.MALE_GENDER;
             } else if (ResourcesData.getFemaleSurnamesList().contains(surname)) {
                 rownum++;
                 name = choose(new File(ResourcesData.NAMES_FEMALE), ResourcesData.NAMES_FEMALE);
                 patronymic = choose(new File(ResourcesData.PATRONYMICS_FEMALE), ResourcesData.PATRONYMICS_FEMALE);
-                gender = FEMALE_GENDER;
+                gender = ResourcesData.FEMALE_GENDER;
             } else {
                 System.out.println(surname + " " + "Фамилия не найдена в списках");
                 continue;
@@ -116,7 +106,7 @@ public class CreateXLSX {
             cell.setCellValue(FlatNumGenerator.generateRandomFlatNum());
         }
 
-        File file = new File(System.getProperty("user.dir") + "/workbook.xlsx");
+        File file = new File(dest);
 
         FileOutputStream outFile = new FileOutputStream(file);
         workbook.write(outFile);
@@ -157,5 +147,13 @@ public class CreateXLSX {
 
     private static int calculateAge(LocalDate birthDate, LocalDate currentDate) {
         return Period.between(birthDate, currentDate).getYears();
+    }
+
+    private static XSSFCellStyle createStyleForTitle(XSSFWorkbook workbook) {
+        XSSFFont font = workbook.createFont();
+        font.setBold(true);
+        style = workbook.createCellStyle();
+        style.setFont(font);
+        return style;
     }
 }

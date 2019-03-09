@@ -19,20 +19,15 @@ import java.util.logging.Logger;
 
 public class CreatePDF {
 
-    public static final String DEST = System.getProperty("user.dir") + "/workbook.pdf";
-    private static final String TABLE_HEADER = "./src/main/resources/table_header.txt";
-    private static final int MIN_NUMBER_OF_PEOPLE = 1;
-    private static final int MAX_NUMBER_OF_PEOPLE = 30;
-    private static final String MALE_GENDER = "М";
-    private static final String FEMALE_GENDER = "Ж";
-    private static final String ALL_SURNAMES = "./src/main/resources/common/surnames.txt";
+    public static final String DEST_PDF = System.getProperty("user.dir") + "/workbook.pdf";
     private static final String FONT = "./src/main/resources/assets/times.ttf";
     private static String dobFormatted;
-    private static PdfPTable table;
-    private static Font font;
+    public static PdfPTable table;
+    public static Font font;
+    public static Document document;
 
     public static void createPdf(String dest) throws IOException, DocumentException {
-        Document document = new Document(PageSize.A4.rotate(), 0, 0, 0, 0);
+        document = new Document(PageSize.A4.rotate(), 0, 0, 0, 0);
 
         BaseFont bf = BaseFont.createFont(FONT, BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
         font = new Font(bf, 8, Font.NORMAL);
@@ -52,29 +47,18 @@ public class CreatePDF {
         cell.setBackgroundColor(new BaseColor(255, 241, 223));
         table.addCell(cell);
 
-        createHeader();
-        fillPDF(generateRandomInt());
-
-        document.add(table);
-        document.close();
-        Logger.getLogger(CreatePDF.class.getName()).info("Файл создан. Путь: " + dest);
+        createPdfHeader();
     }
 
-    private static void createHeader() throws FileNotFoundException {
-        Scanner scanner = new Scanner(new File(TABLE_HEADER));
+    private static void createPdfHeader() throws FileNotFoundException {
+        Scanner scanner = new Scanner(new File(ResourcesData.TABLE_HEADER));
         while (scanner.hasNextLine()) {
             table.addCell(new PdfPCell(new Phrase(scanner.nextLine(), font)));
         }
         scanner.close();
     }
 
-    private static int generateRandomInt() {
-        int diff = MAX_NUMBER_OF_PEOPLE - MIN_NUMBER_OF_PEOPLE;
-        Random random = new Random();
-        return random.nextInt(diff + 1) + MIN_NUMBER_OF_PEOPLE;
-    }
-
-    private static String choose(File f, String src) throws IOException {
+    static String choose(File f, String src) throws IOException {
         Random random = new Random();
         int rndLine = random.nextInt(fileLinesCount(src)) + 1;
         BufferedReader bufferedReader = new BufferedReader(new FileReader(f));
@@ -110,10 +94,10 @@ public class CreatePDF {
         return Period.between(birthDate, currentDate).getYears();
     }
 
-    private static void fillPDF(int numOfPeople) throws IOException {
+    public static void fillPDF(int numOfPeople, String dest) throws IOException, DocumentException {
         List<String> surnames = new ArrayList<>();
         for (int j = 0; j < numOfPeople; j++) {
-            surnames.add(choose(new File(ALL_SURNAMES), ALL_SURNAMES));
+            surnames.add(choose(new File(ResourcesData.ALL_SURNAMES), ResourcesData.ALL_SURNAMES));
         }
 
         for (String surname : surnames) {
@@ -123,11 +107,11 @@ public class CreatePDF {
             if (ResourcesData.getMaleSurnamesList().contains(surname)) {
                 name = choose(new File(ResourcesData.NAMES_MALE), ResourcesData.NAMES_MALE);
                 patronymic = choose(new File(ResourcesData.PATRONYMICS_MALE), ResourcesData.PATRONYMICS_MALE);
-                gender = MALE_GENDER;
+                gender = ResourcesData.MALE_GENDER;
             } else if (ResourcesData.getFemaleSurnamesList().contains(surname)) {
                 name = choose(new File(ResourcesData.NAMES_FEMALE), ResourcesData.NAMES_FEMALE);
                 patronymic = choose(new File(ResourcesData.PATRONYMICS_FEMALE), ResourcesData.PATRONYMICS_FEMALE);
-                gender = FEMALE_GENDER;
+                gender = ResourcesData.FEMALE_GENDER;
             } else {
                 System.out.println(surname + " " + "Фамилия не найдена в списках");
                 continue;
@@ -148,5 +132,8 @@ public class CreatePDF {
             table.addCell(new PdfPCell(new Phrase(String.valueOf(HouseNumGenerator.generateRandomHouse()), font)));
             table.addCell(new PdfPCell(new Phrase(String.valueOf(FlatNumGenerator.generateRandomFlatNum()), font)));
         }
+        document.add(table);
+        document.close();
+        Logger.getLogger(CreatePDF.class.getName()).info("Файл создан. Путь: " + dest);
     }
 }

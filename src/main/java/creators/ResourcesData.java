@@ -18,6 +18,10 @@ class ResourcesData {
     static final String STREETS = "./src/main/resources/common/streets.txt";
     private static final String SURNAMES_MALE = "./src/main/resources/male/surnames-male.txt";
     private static final String SURNAMES_FEMALE = "./src/main/resources/female/surnames-female.txt";
+    static final String MALE_GENDER = "М";
+    static final String FEMALE_GENDER = "Ж";
+    static final String TABLE_HEADER = "./src/main/resources/table_header.txt";
+    static final String ALL_SURNAMES = "./src/main/resources/common/surnames.txt";
 
     static List<String> getMaleSurnamesList() throws FileNotFoundException {
         List<String> maleSurnames = new ArrayList<>();

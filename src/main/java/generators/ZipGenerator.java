@@ -4,8 +4,8 @@ import java.util.Random;
 
 public class ZipGenerator {
 
-    private static final int ZIP_LOWER_LIMIT = 100000;
-    private static final int ZIP_UPPER_LIMIT = 200000;
+    public static final int ZIP_LOWER_LIMIT = 100000;
+    public static final int ZIP_UPPER_LIMIT = 200000;
 
     public static int generateRandomInt() {
         int diff = ZIP_UPPER_LIMIT - ZIP_LOWER_LIMIT;
