@@ -14,7 +14,9 @@ class Main {
 
     public static void main(String[] args) throws IOException, DocumentException {
         CreateXLSX.createXLSX();
+        CreateXLSX.createXlsxHeader();
         CreatePDF.createPdf(CreatePDF.DEST_PDF);
+        CreatePDF.createPdfHeader();
         makeRequest();
     }
 
@@ -25,15 +27,11 @@ class Main {
         final String noinfo = "noinfo";
         Call<model.Response> call = randomPersonApi.getPersonsData(CreatePersons.numOfPeople, excludedData, nat, noinfo);
 
-        /*Log the URL called*/
-        System.out.println(call.request().url() + "");
-
         call.enqueue(new Callback<model.Response>() {
             @Override
             public void onResponse(Call<model.Response> call, Response<model.Response> response) {
                 if (response.isSuccessful()) {
-                    CreatePersons.response1 = response.body();
-                    System.out.println("response " + CreatePersons.response1);
+                    CreatePersons.apiResponse = response.body();
                     try {
                         CreatePersons.buildPersonsList();
                     } catch (IOException e) {

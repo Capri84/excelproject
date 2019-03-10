@@ -7,9 +7,11 @@ import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 import model.Person;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.time.format.DateTimeFormatter;
-import java.util.Random;
 import java.util.Scanner;
 import java.util.logging.Logger;
 
@@ -17,6 +19,19 @@ public class CreatePDF {
 
     public static final String DEST_PDF = System.getProperty("user.dir") + "/workbook.pdf";
     private static final String FONT = "./src/main/resources/assets/times.ttf";
+    private static final String GENERATED_TABLE = "Сгенерированная таблица";
+    private static final String DATE_PATTERN = "dd-MM-yyyy";
+    private static final String LOG_MESSAGE = "Файл создан. Путь: ";
+    private static final int FONT_SIZE = 8;
+    private static final int NUM_OF_COLUMNS = 14;
+    private static final int TABLE_WIDTH_PERCENTAGE = 100;
+    private static final float TABLE_SPACING_BEFORE = 0f;
+    private static final float TABLE_SPACING_AFTER = 0f;
+    private static final int CELL_COLSPAN = 14;
+    private static final float CELL_PADDING = 5.0f;
+    private static final int BACKGROUND_COLOUR_RED = 255;
+    private static final int BACKGROUND_COLOUR_GREEN = 241;
+    private static final int BACKGROUND_COLOUR_BLUE = 223;
     private static PdfPTable table;
     private static Font font;
     private static Document document;
@@ -25,56 +40,30 @@ public class CreatePDF {
         document = new Document(PageSize.A4.rotate(), 0, 0, 0, 0);
 
         BaseFont bf = BaseFont.createFont(FONT, BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
-        font = new Font(bf, 8, Font.NORMAL);
+        font = new Font(bf, FONT_SIZE, Font.NORMAL);
 
         PdfWriter.getInstance(document, new FileOutputStream(dest));
         document.open();
-        table = new PdfPTable(14);
+        table = new PdfPTable(NUM_OF_COLUMNS);
 
-        table.setWidthPercentage(100);
-        table.setSpacingBefore(0f);
-        table.setSpacingAfter(0f);
+        table.setWidthPercentage(TABLE_WIDTH_PERCENTAGE);
+        table.setSpacingBefore(TABLE_SPACING_BEFORE);
+        table.setSpacingAfter(TABLE_SPACING_AFTER);
 
-        PdfPCell cell = new PdfPCell(new Phrase("Сгенерированная таблица", font));
-        cell.setColspan(14);
+        PdfPCell cell = new PdfPCell(new Phrase(GENERATED_TABLE, font));
+        cell.setColspan(CELL_COLSPAN);
         cell.setHorizontalAlignment(Element.ALIGN_CENTER);
-        cell.setPadding(5.0f);
-        cell.setBackgroundColor(new BaseColor(255, 241, 223));
+        cell.setPadding(CELL_PADDING);
+        cell.setBackgroundColor(new BaseColor(BACKGROUND_COLOUR_RED, BACKGROUND_COLOUR_GREEN, BACKGROUND_COLOUR_BLUE));
         table.addCell(cell);
-
-        createPdfHeader();
     }
 
-    private static void createPdfHeader() throws FileNotFoundException {
+    public static void createPdfHeader() throws FileNotFoundException {
         Scanner scanner = new Scanner(new File(ResourcesData.TABLE_HEADER));
         while (scanner.hasNextLine()) {
             table.addCell(new PdfPCell(new Phrase(scanner.nextLine(), font)));
         }
         scanner.close();
-    }
-
-    static String choose(File f, String src) throws IOException {
-        Random random = new Random();
-        int rndLine = random.nextInt(fileLinesCount(src)) + 1;
-        BufferedReader bufferedReader = new BufferedReader(new FileReader(f));
-        for (int i = 0; i < rndLine - 1; i++) {
-            bufferedReader.readLine();
-        }
-        return bufferedReader.readLine();
-    }
-
-    private static int fileLinesCount(String src) {
-        File file = new File(src);
-        int linesCount = 0;
-        try {
-            LineNumberReader lnr = new LineNumberReader(new FileReader(file));
-            while (null != lnr.readLine()) {
-                linesCount++;
-            }
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        }
-        return linesCount;
     }
 
     public static void fillPDF(String dest) throws DocumentException {
@@ -84,9 +73,10 @@ public class CreatePDF {
             table.addCell(new PdfPCell(new Phrase(person.getPatronymic(), CreatePDF.font)));
             table.addCell(new PdfPCell(new Phrase(String.valueOf(person.getAge()), CreatePDF.font)));
             table.addCell(new PdfPCell(new Phrase(person.getGender(), CreatePDF.font)));
-            table.addCell(new PdfPCell(new Phrase(person.getDateOfBirth().format(DateTimeFormatter.ofPattern("dd-MM-yyyy")), CreatePDF.font)));
+            table.addCell(new PdfPCell(new Phrase(person.getDateOfBirth().
+                    format(DateTimeFormatter.ofPattern(DATE_PATTERN)), CreatePDF.font)));
             table.addCell(new PdfPCell(new Phrase(String.valueOf(person.getInn()), CreatePDF.font)));
-            table.addCell(new PdfPCell(new Phrase(person.getZipCode(), CreatePDF.font)));
+            table.addCell(new PdfPCell(new Phrase(person.getPostCode(), CreatePDF.font)));
             table.addCell(new PdfPCell(new Phrase(person.getCountry(), CreatePDF.font)));
             table.addCell(new PdfPCell(new Phrase(person.getRegion(), CreatePDF.font)));
             table.addCell(new PdfPCell(new Phrase(person.getCity(), CreatePDF.font)));
@@ -96,6 +86,6 @@ public class CreatePDF {
         }
         document.add(table);
         document.close();
-        Logger.getLogger(CreatePDF.class.getName()).info("Файл создан. Путь: " + dest);
+        Logger.getLogger(CreatePDF.class.getName()).info(LOG_MESSAGE + dest);
     }
 }

@@ -9,15 +9,20 @@ import org.apache.poi.xssf.usermodel.XSSFFont;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.time.format.DateTimeFormatter;
-import java.util.Random;
 import java.util.Scanner;
 import java.util.logging.Logger;
 
 public class CreateXLSX {
 
     public static final String DEST_XLSX = System.getProperty("user.dir") + "/workbook.xlsx";
+    private static final String SHEET_NAME = "Workbook sheet";
+    private static final String DATE_PATTERN = "dd-MM-yyyy";
+    private static final String LOG_MESSAGE = "Файл создан. Путь: ";
     private static int rownum = 0;
     private static XSSFWorkbook workbook;
     private static XSSFSheet sheet;
@@ -25,16 +30,14 @@ public class CreateXLSX {
     private static Cell cell;
     private static XSSFCellStyle style;
 
-    public static void createXLSX() throws IOException {
+    public static void createXLSX() {
         workbook = new XSSFWorkbook();
-        sheet = workbook.createSheet("Workbook sheet");
+        sheet = workbook.createSheet(SHEET_NAME);
         style = createStyleForTitle(workbook);
         row = sheet.createRow(rownum);
-
-        createXlsxHeader();
     }
 
-    private static void createXlsxHeader() throws FileNotFoundException {
+    public static void createXlsxHeader() throws FileNotFoundException {
         Scanner scanner = new Scanner(new File(ResourcesData.TABLE_HEADER));
         int i = 0;
         while (scanner.hasNextLine()) {
@@ -61,11 +64,11 @@ public class CreateXLSX {
             cell = row.createCell(4, CellType.STRING);
             cell.setCellValue(person.getGender());
             cell = row.createCell(5, CellType.STRING);
-            cell.setCellValue(person.getDateOfBirth().format(DateTimeFormatter.ofPattern("dd-MM-yyyy")));
+            cell.setCellValue(person.getDateOfBirth().format(DateTimeFormatter.ofPattern(DATE_PATTERN)));
             cell = row.createCell(6, CellType.STRING);
             cell.setCellValue(String.valueOf(person.getInn()));
             cell = row.createCell(7, CellType.NUMERIC);
-            cell.setCellValue(person.getZipCode());
+            cell.setCellValue(person.getPostCode());
             cell = row.createCell(8, CellType.STRING);
             cell.setCellValue(person.getCountry());
             cell = row.createCell(9, CellType.STRING);
@@ -80,35 +83,11 @@ public class CreateXLSX {
             cell.setCellValue(person.getFlatNum());
         }
 
-        File file = new File(System.getProperty("user.dir") + "/workbook.xlsx");
+        File file = new File(DEST_XLSX);
 
         FileOutputStream outFile = new FileOutputStream(file);
         workbook.write(outFile);
-        Logger.getLogger(CreateXLSX.class.getName()).info("Файл создан. Путь: " + dest);
-    }
-
-    private static String choose(File f, String src) throws IOException {
-        Random random = new Random();
-        int rndLine = random.nextInt(fileLinesCount(src)) + 1;
-        BufferedReader bufferedReader = new BufferedReader(new FileReader(f));
-        for (int i = 0; i < rndLine - 1; i++) {
-            bufferedReader.readLine();
-        }
-        return bufferedReader.readLine();
-    }
-
-    private static int fileLinesCount(String src) {
-        File file = new File(src);
-        int linesCount = 0;
-        try {
-            LineNumberReader lnr = new LineNumberReader(new FileReader(file));
-            while (null != lnr.readLine()) {
-                linesCount++;
-            }
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        }
-        return linesCount;
+        Logger.getLogger(CreateXLSX.class.getName()).info(LOG_MESSAGE + dest);
     }
 
     private static XSSFCellStyle createStyleForTitle(XSSFWorkbook workbook) {

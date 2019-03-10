@@ -6,12 +6,25 @@ public class InnGenerator {
 
     private static final int INN_INDEX_LENGTH = 6;
     private static final int DIGIT_BOUNDARY = 10;
-    private static final int[] inspectionsArray = {7701, 7702, 7703, 7704, 7705, 7706, 7707, 7708, 7709, 7710, 7713, 7714, 7715,
-            7716, 7717, 7718, 7719, 7720, 7721, 7722, 7723, 7724, 7725, 7726, 7727, 7728, 7729, 7730, 7731, 7733, 7734,
-            7735, 7736, 7743, 7746, 7747, 7751};
+
+    /**
+     * An array of inspections of the 77 region
+     */
+    private static final int[] inspectionsArray = {7701, 7702, 7703, 7704, 7705, 7706, 7707, 7708, 7709, 7710, 7713,
+            7714, 7715, 7716, 7717, 7718, 7719, 7720, 7721, 7722, 7723, 7724, 7725, 7726, 7727, 7728, 7729, 7730, 7731,
+            7733, 7734, 7735, 7736, 7743, 7746, 7747, 7751};
+
+    /**
+     * An array of multipliers used to calculate the eleventh digit of INN
+     */
     private static final int[] digitElevenFactors = {7, 2, 4, 10, 3, 5, 9, 4, 6, 8};
+
+    /** An array of multipliers used to calculate the twelves digit of INN */
     private static final int[] digitTwelveFactors = {3, 7, 2, 4, 10, 3, 5, 9, 4, 6, 8};
 
+    /**
+     * This method generates digits 5-10 of INN
+     */
     private static int[] generateMiddle() {
         Random random = new Random();
         int[] innIndexArray = new int[INN_INDEX_LENGTH];
@@ -53,7 +66,7 @@ public class InnGenerator {
                 digitTwelveFactors[10] * countDigitEleven(firstFourDigits, middleSixDigits)) % 11) % 10;
     }
 
-    public static long makeINN() {
+    public static long generateINN() {
         StringBuilder sb = new StringBuilder();
         int[] firstFourDigits = convertIntToArray();
         int[] middleSixDigits = generateMiddle();

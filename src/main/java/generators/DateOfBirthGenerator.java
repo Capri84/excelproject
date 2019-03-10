@@ -4,9 +4,9 @@ import java.time.LocalDate;
 import java.util.Random;
 
 public class DateOfBirthGenerator {
-    private final LocalDate minDate;
-    private final LocalDate maxDate;
-    private final Random random;
+    private LocalDate minDate;
+    private LocalDate maxDate;
+    private Random random;
 
     public DateOfBirthGenerator(LocalDate minDate, LocalDate maxDate) {
         this.minDate = minDate;
@@ -14,7 +14,7 @@ public class DateOfBirthGenerator {
         this.random = new Random();
     }
 
-    public LocalDate nextDate() {
+    public LocalDate generateDate() {
         int minDay = (int) minDate.toEpochDay();
         int maxDay = (int) maxDate.toEpochDay();
         long randomDay = minDay + random.nextInt(maxDay - minDay);

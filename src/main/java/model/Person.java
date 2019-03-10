@@ -10,7 +10,7 @@ public class Person {
     private String gender;
     private LocalDate dateOfBirth;
     private long inn;
-    private String zipCode;
+    private String postCode;
     private String country;
     private String region;
     private String city;
@@ -19,7 +19,7 @@ public class Person {
     private int flatNum;
 
     public Person(String name, String surname, String patronymic, int age, String gender, LocalDate dateOfBirth,
-                  long inn, String zipCode, String country, String region, String city, String street, int houseNum,
+                  long inn, String postCode, String country, String region, String city, String street, int houseNum,
                   int flatNum) {
         this.name = name;
         this.surname = surname;
@@ -28,7 +28,7 @@ public class Person {
         this.gender = gender;
         this.dateOfBirth = dateOfBirth;
         this.inn = inn;
-        this.zipCode = zipCode;
+        this.postCode = postCode;
         this.country = country;
         this.region = region;
         this.city = city;
@@ -65,8 +65,8 @@ public class Person {
         return inn;
     }
 
-    public String getZipCode() {
-        return zipCode;
+    public String getPostCode() {
+        return postCode;
     }
 
     public String getCountry() {
@@ -103,7 +103,7 @@ public class Person {
                 ", gender='" + gender + '\'' +
                 ", dateOfBirth=" + dateOfBirth +
                 ", inn=" + inn +
-                ", zipCode=" + zipCode +
+                ", postCode=" + postCode +
                 ", country='" + country + '\'' +
                 ", region='" + region + '\'' +
                 ", city='" + city + '\'' +
