@@ -58,12 +58,14 @@ public class CreatePDF {
         table.addCell(cell);
     }
 
-    public static void createPdfHeader() throws FileNotFoundException {
-        Scanner scanner = new Scanner(new File(ResourcesData.TABLE_HEADER));
-        while (scanner.hasNextLine()) {
-            table.addCell(new PdfPCell(new Phrase(scanner.nextLine(), font)));
+    public static void createPdfHeader() {
+        try (Scanner scanner = new Scanner(new File(ResourcesData.TABLE_HEADER))) {
+            while (scanner.hasNextLine()) {
+                table.addCell(new PdfPCell(new Phrase(scanner.nextLine(), font)));
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
         }
-        scanner.close();
     }
 
     public static void fillPDF(String dest) throws DocumentException {

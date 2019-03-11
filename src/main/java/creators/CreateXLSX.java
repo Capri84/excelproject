@@ -49,7 +49,7 @@ public class CreateXLSX {
         scanner.close();
     }
 
-    public static void fillXLSX(String dest) throws IOException {
+    public static void fillXLSX(String dest) {
         for (Person person : CreatePersons.persons) {
             rownum++;
             row = sheet.createRow(rownum);
@@ -85,8 +85,12 @@ public class CreateXLSX {
 
         File file = new File(DEST_XLSX);
 
-        FileOutputStream outFile = new FileOutputStream(file);
-        workbook.write(outFile);
+        try (FileOutputStream outFile = new FileOutputStream(file)) {
+            workbook.write(outFile);
+            workbook.close();
+        } catch (IOException ioe) {
+            ioe.printStackTrace();
+        }
         Logger.getLogger(CreateXLSX.class.getName()).info(LOG_MESSAGE + dest);
     }
 

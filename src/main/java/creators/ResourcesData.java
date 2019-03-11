@@ -23,23 +23,27 @@ class ResourcesData {
     private static final String SURNAMES_MALE = "./src/main/resources/male/surnames_male.txt";
     private static final String SURNAMES_FEMALE = "./src/main/resources/female/surnames_female.txt";
 
-    static List<String> getMaleSurnamesList() throws FileNotFoundException {
+    static List<String> getMaleSurnamesList() {
         List<String> maleSurnames = new ArrayList<>();
-        Scanner scanner = new Scanner(new File(SURNAMES_MALE));
-        while (scanner.hasNextLine()) {
-            maleSurnames.add(scanner.nextLine());
+        try (Scanner scanner = new Scanner(new File(SURNAMES_MALE))) {
+            while (scanner.hasNextLine()) {
+                maleSurnames.add(scanner.nextLine());
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
         }
-        scanner.close();
         return maleSurnames;
     }
 
-    static List<String> getFemaleSurnamesList() throws FileNotFoundException {
+    static List<String> getFemaleSurnamesList() {
         List<String> femaleSurnames = new ArrayList<>();
-        Scanner scanner = new Scanner(new File(SURNAMES_FEMALE));
-        while (scanner.hasNextLine()) {
-            femaleSurnames.add(scanner.nextLine());
+        try (Scanner scanner = new Scanner(new File(SURNAMES_FEMALE))) {
+            while (scanner.hasNextLine()) {
+                femaleSurnames.add(scanner.nextLine());
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
         }
-        scanner.close();
         return femaleSurnames;
     }
 }

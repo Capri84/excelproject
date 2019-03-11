@@ -12,6 +12,8 @@ import java.io.IOException;
 
 class Main {
 
+    private static final String NO_CONNECTION_MSG = "Подключение к интернету отсутствует. Данные взяты из ресурсов.";
+
     public static void main(String[] args) throws IOException, DocumentException {
         CreateXLSX.createXLSX();
         CreateXLSX.createXlsxHeader();
@@ -40,7 +42,7 @@ class Main {
                     try {
                         CreateXLSX.fillXLSX(CreateXLSX.DEST_XLSX);
                         CreatePDF.fillPDF(CreatePDF.DEST_PDF);
-                    } catch (IOException | DocumentException ioe) {
+                    } catch (DocumentException ioe) {
                         ioe.printStackTrace();
                     }
                 } else {
@@ -50,7 +52,7 @@ class Main {
 
             @Override
             public void onFailure(Call<model.Response> call, Throwable t) {
-                System.out.println("Подключение к интернету отсутствует. Данные взяты из ресурсов.");
+                System.out.println(NO_CONNECTION_MSG);
                 try {
                     CreatePersons.buildPersonsList();
                     CreateXLSX.fillXLSX(CreateXLSX.DEST_XLSX);

@@ -51,11 +51,37 @@ fabric.properties
 
 .idea/**/contentModel.xml
 
-### Example user template template
-### Example user template
+### Intellij ###
+# Covers JetBrains IDEs: IntelliJ, RubyMine, PhpStorm, AppCode, PyCharm, CLion, Android Studio and WebStorm
+# Reference: https://intellij-support.jetbrains.com/hc/en-us/articles/206544839
 
 # IntelliJ project files
 .idea
 *.iml
-out
 gen
+/.gitignore
+
+# User-specific stuff
+.idea/**/usage.statistics.xml
+
+# CMake
+cmake-build-*/
+
+# Android studio 3.1+ serialized cache file
+.idea/caches/build_file_checksums.ser
+
+# Sonarlint plugin
+.idea/sonarlint
+
+### Maven ###
+log/
+target/
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+release.properties
+dependency-reduced-pom.xml
+buildNumber.properties
+.mvn/timing.properties
+.mvn/wrapper/maven-wrapper.jar
