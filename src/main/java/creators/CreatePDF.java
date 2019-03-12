@@ -7,10 +7,8 @@ import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 import model.Person;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
+import java.net.URL;
 import java.time.format.DateTimeFormatter;
 import java.util.Scanner;
 import java.util.logging.Logger;
@@ -60,10 +58,13 @@ public class CreatePDF {
 
     public static void createPdfHeader() {
         try (Scanner scanner = new Scanner(new File(ResourcesData.TABLE_HEADER))) {
+            System.out.println("Attempting to read from file in: " + new File("table_header.txt").getCanonicalPath());
+            URL url = CreatePDF.class.getClassLoader().getResource("table_header.txt");
+            System.out.println(url);
             while (scanner.hasNextLine()) {
                 table.addCell(new PdfPCell(new Phrase(scanner.nextLine(), font)));
             }
-        } catch (FileNotFoundException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }

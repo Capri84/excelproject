@@ -17,14 +17,18 @@ import java.util.regex.Pattern;
 public class CreatePersons {
 
     public static Response apiResponse = null;
-    public static int numOfPeople = NumOfPeopleGenerator.generateRndNumOfPeople();
+    private Generatable<Integer> numOfPeopleGenerator = new NumOfPeopleGenerator();
+    public int numOfPeople = numOfPeopleGenerator.generate();
     static List<Person> persons = new ArrayList<>();
-    private static LocalDate dobDate;
+    private LocalDate dobDate;
+    private Generatable<Integer> postCodeGenerator = new PostCodeGenerator();
+    private Generatable<Integer> flatNumGenerator = new FlatNumGenerator();
+    private Generatable<Integer> houseNumGenerator = new HouseNumGenerator();
 
     /**
      * This method "builds" each Person and forms a list of these Persons.
      */
-    public static void buildPersonsList() throws IOException {
+    public void buildPersonsList() throws IOException {
         String name;
         String gender;
         String patronymic;
@@ -67,7 +71,7 @@ public class CreatePersons {
                 postCode = apiResponse.getResults().get(i).getLocation().getPostcode();
                 if (Integer.parseInt(postCode) < PostCodeGenerator.POST_LOWER_LIMIT
                         || Integer.parseInt(postCode) > PostCodeGenerator.POST_UPPER_LIMIT) {
-                    postCode = String.valueOf(PostCodeGenerator.generateRandomInt());
+                    postCode = String.valueOf(postCodeGenerator.generate());
                 }
 
                 country = RandomLinesReader.choose(new File(ResourcesData.COUNTRIES), ResourcesData.COUNTRIES);
@@ -84,8 +88,8 @@ public class CreatePersons {
                 street = streetApi.substring(0, position) + streetApi.substring(position, position + 1).toUpperCase()
                         + streetApi.substring(position + 1);
 
-                houseNum = HouseNumGenerator.generateRandomHouse();
-                flatNum = FlatNumGenerator.generateRandomFlatNum();
+                houseNum = houseNumGenerator.generate();
+                flatNum = flatNumGenerator.generate();
 
                 persons.add(new Person(name, surname, patronymic, age, gender, dateOfBirth, inn, postCode, country,
                         region, city, street, houseNum, flatNum));
@@ -115,13 +119,13 @@ public class CreatePersons {
                 age = calculateAge(generateDOB(), LocalDate.now());
                 dateOfBirth = dobDate;
                 inn = InnGenerator.generateINN();
-                postCode = String.valueOf(PostCodeGenerator.generateRandomInt());
+                postCode = String.valueOf(postCodeGenerator.generate());
                 country = RandomLinesReader.choose(new File(ResourcesData.COUNTRIES), ResourcesData.COUNTRIES);
                 region = RandomLinesReader.choose(new File(ResourcesData.REGIONS), ResourcesData.REGIONS);
                 city = RandomLinesReader.choose(new File(ResourcesData.CITIES), ResourcesData.CITIES);
                 street = RandomLinesReader.choose(new File(ResourcesData.STREETS), ResourcesData.STREETS);
-                houseNum = HouseNumGenerator.generateRandomHouse();
-                flatNum = FlatNumGenerator.generateRandomFlatNum();
+                houseNum = houseNumGenerator.generate();
+                flatNum = flatNumGenerator.generate();
 
                 persons.add(new Person(name, surname, patronymic, age, gender, dateOfBirth, inn, postCode, country,
                         region, city, street, houseNum, flatNum));
@@ -129,10 +133,9 @@ public class CreatePersons {
         }
     }
 
-    private static LocalDate generateDOB() {
-        DateOfBirthGenerator dob = new DateOfBirthGenerator(LocalDate.of(1919, 1, 1),
-                LocalDate.of(2019, 1, 1));
-        dobDate = dob.generateDate();
+    private LocalDate generateDOB() {
+        Generatable<LocalDate> dobGenerator = new DateOfBirthGenerator();
+        dobDate = dobGenerator.generate();
         return dobDate;
     }
 

@@ -3,29 +3,17 @@ package generators;
 import java.time.LocalDate;
 import java.util.Random;
 
-public class DateOfBirthGenerator {
-    private LocalDate minDate;
-    private LocalDate maxDate;
-    private Random random;
+public class DateOfBirthGenerator implements Generatable<LocalDate> {
 
-    public DateOfBirthGenerator(LocalDate minDate, LocalDate maxDate) {
-        this.minDate = minDate;
-        this.maxDate = maxDate;
-        this.random = new Random();
-    }
-
-    public LocalDate generateDate() {
-        int minDay = (int) minDate.toEpochDay();
-        int maxDay = (int) maxDate.toEpochDay();
-        long randomDay = minDay + random.nextInt(maxDay - minDay);
-        return LocalDate.ofEpochDay(randomDay);
-    }
+    private static final LocalDate MIN_DATE = LocalDate.of(1919, 1, 1);
+    private static final LocalDate MAX_DATE = LocalDate.of(2019, 1, 1);
 
     @Override
-    public String toString() {
-        return "RandomDate{" +
-                "maxDate=" + maxDate +
-                ", minDate=" + minDate +
-                '}';
+    public LocalDate generate() {
+        int minDay = (int) MIN_DATE.toEpochDay();
+        int maxDay = (int) MAX_DATE.toEpochDay();
+        Random random = new Random();
+        long randomDay = minDay + random.nextInt(maxDay - minDay);
+        return LocalDate.ofEpochDay(randomDay);
     }
 }

@@ -13,6 +13,7 @@ import java.io.IOException;
 class Main {
 
     private static final String NO_CONNECTION_MSG = "Подключение к интернету отсутствует. Данные взяты из ресурсов.";
+    private static CreatePersons personCreator = new CreatePersons();
 
     public static void main(String[] args) throws IOException, DocumentException {
         CreateXLSX.createXLSX();
@@ -27,7 +28,7 @@ class Main {
         final String excludedData = "email,login,registered,phone,cell,id,picture,nat";
         final String nat = "au,br,ch,de,dk,es,fi,fr,ie,no,nl,nz,tr,us";
         final String noinfo = "noinfo";
-        Call<model.Response> call = randomPersonApi.getPersonsData(CreatePersons.numOfPeople, excludedData, nat, noinfo);
+        Call<model.Response> call = randomPersonApi.getPersonsData(personCreator.numOfPeople, excludedData, nat, noinfo);
 
         call.enqueue(new Callback<model.Response>() {
             @Override
@@ -35,7 +36,7 @@ class Main {
                 if (response.isSuccessful()) {
                     CreatePersons.apiResponse = response.body();
                     try {
-                        CreatePersons.buildPersonsList();
+                        personCreator.buildPersonsList();
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -54,7 +55,7 @@ class Main {
             public void onFailure(Call<model.Response> call, Throwable t) {
                 System.out.println(NO_CONNECTION_MSG);
                 try {
-                    CreatePersons.buildPersonsList();
+                    personCreator.buildPersonsList();
                     CreateXLSX.fillXLSX(CreateXLSX.DEST_XLSX);
                     CreatePDF.fillPDF(CreatePDF.DEST_PDF);
                 } catch (IOException | DocumentException e) {
