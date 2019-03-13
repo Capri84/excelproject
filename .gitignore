@@ -88,6 +88,6 @@ buildNumber.properties
 !/.mvn/wrapper/maven-wrapper.jar
 
 ### Others ###
-excelproject/excel-project-1.0-SNAPSHOT.jar
-excelproject/workbook.pdf
-excelproject/workbook.xlsx
+/excel-project-1.0-SNAPSHOT.jar
+/workbook.pdf
+/workbook.xlsx
