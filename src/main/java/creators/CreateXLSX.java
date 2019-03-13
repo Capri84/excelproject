@@ -37,16 +37,18 @@ public class CreateXLSX {
         row = sheet.createRow(rownum);
     }
 
-    public static void createXlsxHeader() throws FileNotFoundException {
-        Scanner scanner = new Scanner(new File(ResourcesData.TABLE_HEADER));
-        int i = 0;
-        while (scanner.hasNextLine()) {
-            cell = row.createCell(i, CellType.STRING);
-            cell.setCellValue(scanner.nextLine());
-            cell.setCellStyle(style);
-            i++;
+    public static void createXlsxHeader() {
+        try (Scanner scanner = new Scanner(new File(ResourcesData.TABLE_HEADER))) {
+            int i = 0;
+            while (scanner.hasNextLine()) {
+                cell = row.createCell(i, CellType.STRING);
+                cell.setCellValue(scanner.nextLine());
+                cell.setCellStyle(style);
+                i++;
+            }
+        } catch (FileNotFoundException fnfe) {
+            fnfe.printStackTrace();
         }
-        scanner.close();
     }
 
     public static void fillXLSX(String dest) {

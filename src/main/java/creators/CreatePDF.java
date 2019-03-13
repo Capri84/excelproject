@@ -8,15 +8,16 @@ import com.itextpdf.text.pdf.PdfWriter;
 import model.Person;
 
 import java.io.*;
-import java.net.URL;
 import java.time.format.DateTimeFormatter;
+import java.util.Objects;
 import java.util.Scanner;
 import java.util.logging.Logger;
 
 public class CreatePDF {
 
     public static final String DEST_PDF = System.getProperty("user.dir") + "/workbook.pdf";
-    private static final String FONT = "./src/main/resources/assets/times.ttf";
+    private static final String FONT = Objects.requireNonNull(ResourcesData.class.getClassLoader().
+            getResource("assets/times.ttf")).getPath();
     private static final String GENERATED_TABLE = "Сгенерированная таблица";
     private static final String DATE_PATTERN = "dd-MM-yyyy";
     private static final String LOG_MESSAGE = "Файл создан. Путь: ";
@@ -34,14 +35,23 @@ public class CreatePDF {
     private static Font font;
     private static Document document;
 
-    public static void createPdf(String dest) throws IOException, DocumentException {
+    public static void createPdf(String dest) {
         document = new Document(PageSize.A4.rotate(), 0, 0, 0, 0);
 
-        BaseFont bf = BaseFont.createFont(FONT, BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
-        font = new Font(bf, FONT_SIZE, Font.NORMAL);
+        try {
+            BaseFont bf = BaseFont.createFont(FONT, BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
+            font = new Font(bf, FONT_SIZE, Font.NORMAL);
+        } catch (IOException | DocumentException e) {
+            e.printStackTrace();
+        }
 
-        PdfWriter.getInstance(document, new FileOutputStream(dest));
-        document.open();
+        try {
+            PdfWriter.getInstance(document, new FileOutputStream(dest));
+            document.open();
+        } catch (DocumentException | FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
         table = new PdfPTable(NUM_OF_COLUMNS);
 
         table.setWidthPercentage(TABLE_WIDTH_PERCENTAGE);
@@ -58,9 +68,6 @@ public class CreatePDF {
 
     public static void createPdfHeader() {
         try (Scanner scanner = new Scanner(new File(ResourcesData.TABLE_HEADER))) {
-            System.out.println("Attempting to read from file in: " + new File("table_header.txt").getCanonicalPath());
-            URL url = CreatePDF.class.getClassLoader().getResource("table_header.txt");
-            System.out.println(url);
             while (scanner.hasNextLine()) {
                 table.addCell(new PdfPCell(new Phrase(scanner.nextLine(), font)));
             }

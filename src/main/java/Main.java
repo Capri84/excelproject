@@ -7,7 +7,6 @@ import network.RetrofitInstance;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-
 import java.io.IOException;
 
 class Main {
@@ -15,7 +14,7 @@ class Main {
     private static final String NO_CONNECTION_MSG = "Подключение к интернету отсутствует. Данные взяты из ресурсов.";
     private static CreatePersons personCreator = new CreatePersons();
 
-    public static void main(String[] args) throws IOException, DocumentException {
+    public static void main(String[] args) {
         CreateXLSX.createXLSX();
         CreateXLSX.createXlsxHeader();
         CreatePDF.createPdf(CreatePDF.DEST_PDF);
@@ -37,14 +36,14 @@ class Main {
                     CreatePersons.apiResponse = response.body();
                     try {
                         personCreator.buildPersonsList();
-                    } catch (IOException e) {
-                        e.printStackTrace();
+                    } catch (IOException ioe) {
+                        ioe.printStackTrace();
                     }
                     try {
                         CreateXLSX.fillXLSX(CreateXLSX.DEST_XLSX);
                         CreatePDF.fillPDF(CreatePDF.DEST_PDF);
-                    } catch (DocumentException ioe) {
-                        ioe.printStackTrace();
+                    } catch (DocumentException de) {
+                        de.printStackTrace();
                     }
                 } else {
                     System.out.println("response code " + response.code());

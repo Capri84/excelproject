@@ -74,6 +74,7 @@ cmake-build-*/
 
 ### Maven ###
 log/
+target/
 pom.xml.tag
 pom.xml.releaseBackup
 pom.xml.versionsBackup
@@ -85,3 +86,8 @@ buildNumber.properties
 
 # Avoid ignoring Maven wrapper jar file (.jar files are usually ignored)
 !/.mvn/wrapper/maven-wrapper.jar
+
+### Others ###
+excelproject/excel-project-1.0-SNAPSHOT.jar
+excelproject/workbook.pdf
+excelproject/workbook.xlsx
