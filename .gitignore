@@ -91,3 +91,4 @@ buildNumber.properties
 /excel-project-1.0-SNAPSHOT.jar
 /workbook.pdf
 /workbook.xlsx
+/src/main/resources/dbconfig

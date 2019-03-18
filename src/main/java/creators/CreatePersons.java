@@ -3,6 +3,7 @@ package creators;
 import generators.*;
 import model.Person;
 import model.Response;
+
 import java.io.File;
 import java.io.IOException;
 import java.time.LocalDate;
@@ -16,18 +17,28 @@ import java.util.regex.Pattern;
 public class CreatePersons {
 
     public static Response apiResponse = null;
-    private Generatable<Integer> numOfPeopleGenerator = new NumOfPeopleGenerator();
-    public int numOfPeople = numOfPeopleGenerator.generate();
-    static List<Person> persons = new ArrayList<>();
+    //  private Generatable<Integer> numOfPeopleGenerator = new NumOfPeopleGenerator();
+    //  public int numOfPeople = numOfPeopleGenerator.generate();
+    public static List<Person> persons = new ArrayList<>();
     private LocalDate dobDate;
     private Generatable<Integer> postCodeGenerator = new PostCodeGenerator();
     private Generatable<Integer> flatNumGenerator = new FlatNumGenerator();
     private Generatable<Integer> houseNumGenerator = new HouseNumGenerator();
 
+    public static int calculateAge(LocalDate birthDate, LocalDate currentDate) {
+        return Period.between(birthDate, currentDate).getYears();
+    }
+
+    private LocalDate generateDOB() {
+        Generatable<LocalDate> dobGenerator = new DateOfBirthGenerator();
+        dobDate = dobGenerator.generate();
+        return dobDate;
+    }
+
     /**
      * This method "builds" each Person and forms a list of these Persons.
      */
-    public void buildPersonsList() throws IOException {
+    public void buildPersonsList(int peopleAmount) throws IOException {
         String name;
         String gender;
         String patronymic;
@@ -43,7 +54,7 @@ public class CreatePersons {
         int flatNum;
 
         if (apiResponse != null) {
-            for (int i = 0; i < numOfPeople; i++) {
+            for (int i = 0; i < peopleAmount; i++) {
                 name = capitalizeFirstLetter(apiResponse.getResults().get(i).getName().getFirst());
                 String surname = capitalizeFirstLetter(apiResponse.getResults().get(i).getName().getLast());
 
@@ -95,7 +106,7 @@ public class CreatePersons {
             }
         } else {
             List<String> surnames = new ArrayList<>();
-            for (int j = 0; j < numOfPeople; j++) {
+            for (int j = 0; j < peopleAmount; j++) {
                 surnames.add(RandomLinesReader.choose(new File(ResourcesData.ALL_SURNAMES), ResourcesData.ALL_SURNAMES));
             }
 
@@ -130,16 +141,6 @@ public class CreatePersons {
                         region, city, street, houseNum, flatNum));
             }
         }
-    }
-
-    private LocalDate generateDOB() {
-        Generatable<LocalDate> dobGenerator = new DateOfBirthGenerator();
-        dobDate = dobGenerator.generate();
-        return dobDate;
-    }
-
-    private static int calculateAge(LocalDate birthDate, LocalDate currentDate) {
-        return Period.between(birthDate, currentDate).getYears();
     }
 
     /**
