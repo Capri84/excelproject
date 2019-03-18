@@ -2,6 +2,7 @@ import com.itextpdf.text.DocumentException;
 import creators.CreatePDF;
 import creators.CreatePersons;
 import creators.CreateXLSX;
+import database.CreateDBTables;
 import database.DBOperations;
 import generators.Generatable;
 import generators.NumOfPeopleGenerator;
@@ -21,6 +22,7 @@ class Main {
     private static int numOfPeople = numOfPeopleGenerator.generate();
 
     public static void main(String[] args) {
+        CreateDBTables.createTables();
         CreateXLSX.createXLSX();
         CreateXLSX.createXlsxHeader();
         CreatePDF.createPdf(CreatePDF.DEST_PDF);
@@ -48,7 +50,7 @@ class Main {
                     try {
                         CreateXLSX.fillXLSX(CreateXLSX.DEST_XLSX);
                         CreatePDF.fillPDF(CreatePDF.DEST_PDF);
-                        DBOperations.selectFIO();
+                        DBOperations.fillDB();
                     } catch (DocumentException de) {
                         de.printStackTrace();
                     }
@@ -62,7 +64,6 @@ class Main {
                 System.out.println(NO_CONNECTION_MSG);
                 try {
                     DBOperations.selectRndFromDB(numOfPeople);
-                    //     personCreator.buildPersonsList();
                     CreateXLSX.fillXLSX(CreateXLSX.DEST_XLSX);
                     CreatePDF.fillPDF(CreatePDF.DEST_PDF);
                 } catch (DocumentException e) {
