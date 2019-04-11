@@ -1,4 +1,4 @@
-package model;
+package ru.capri84.excelproject.model;
 
 import com.google.gson.annotations.SerializedName;
 

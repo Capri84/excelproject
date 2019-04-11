@@ -1,6 +1,6 @@
-package creators;
+package ru.capri84.excelproject.creators;
 
-import model.Person;
+import ru.capri84.excelproject.model.Person;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.Row;

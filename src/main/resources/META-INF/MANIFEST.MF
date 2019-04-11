@@ -1,3 +1,3 @@
 Manifest-Version: 1.0
-Main-Class: Main
+ru.capri84.excelproject.Main-Class: ru.capri84.excelproject.Main
 

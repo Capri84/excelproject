@@ -1,11 +1,11 @@
-package creators;
+package ru.capri84.excelproject.creators;
 
 import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.BaseFont;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
-import model.Person;
+import ru.capri84.excelproject.model.Person;
 
 import java.io.*;
 import java.time.format.DateTimeFormatter;

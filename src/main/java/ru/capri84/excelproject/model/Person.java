@@ -1,4 +1,4 @@
-package model;
+package ru.capri84.excelproject.model;
 
 import java.time.LocalDate;
 

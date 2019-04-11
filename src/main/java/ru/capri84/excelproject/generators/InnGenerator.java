@@ -1,11 +1,8 @@
-package generators;
+package ru.capri84.excelproject.generators;
 
-import java.util.Random;
+import ru.capri84.excelproject.utils.Utils;
 
 public class InnGenerator {
-
-    private static final int INN_INDEX_LENGTH = 6;
-    private static final int DIGIT_BOUNDARY = 10;
 
     /**
      * An array of inspections of the 77 region
@@ -26,17 +23,15 @@ public class InnGenerator {
      * This method generates digits 5-10 of INN
      */
     private static int[] generateMiddle() {
-        Random random = new Random();
-        int[] innIndexArray = new int[INN_INDEX_LENGTH];
-        for (int i = 0; i < INN_INDEX_LENGTH; i++) {
-            innIndexArray[i] = random.nextInt(DIGIT_BOUNDARY);
+        int[] innIndexArray = new int[GeneratorLimits.INN_INDEX_LENGTH.getValue()];
+        for (int i = 0; i < GeneratorLimits.INN_INDEX_LENGTH.getValue(); i++) {
+            innIndexArray[i] = Utils.random.nextInt(GeneratorLimits.DIGIT_BOUNDARY.getValue());
         }
         return innIndexArray;
     }
 
     private static int getRandomInspection() {
-        Random random = new Random();
-        return inspectionsArray[random.nextInt(inspectionsArray.length)];
+        return inspectionsArray[Utils.random.nextInt(inspectionsArray.length)];
     }
 
     private static int[] convertIntToArray() {

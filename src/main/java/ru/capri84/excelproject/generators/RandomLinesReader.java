@@ -1,13 +1,13 @@
-package generators;
+package ru.capri84.excelproject.generators;
+
+import ru.capri84.excelproject.utils.Utils;
 
 import java.io.*;
-import java.util.Random;
 
 public class RandomLinesReader {
 
     public static String choose(File f, String src) throws IOException {
-        Random random = new Random();
-        int rndLine = random.nextInt(fileLinesCount(src)) + 1;
+        int rndLine = Utils.random.nextInt(fileLinesCount(src)) + 1;
         BufferedReader bufferedReader = new BufferedReader(new FileReader(f));
         for (int i = 0; i < rndLine - 1; i++) {
             bufferedReader.readLine();

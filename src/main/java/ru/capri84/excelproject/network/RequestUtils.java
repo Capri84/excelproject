@@ -1,37 +1,30 @@
+package ru.capri84.excelproject.network;
+
 import com.itextpdf.text.DocumentException;
-import creators.CreatePDF;
-import creators.CreatePersons;
-import creators.CreateXLSX;
-import network.RandomPersonApi;
-import network.RetrofitInstance;
 import retrofit2.Call;
 import retrofit2.Callback;
-import retrofit2.Response;
+import ru.capri84.excelproject.creators.CreatePDF;
+import ru.capri84.excelproject.creators.CreatePersons;
+import ru.capri84.excelproject.creators.CreateXLSX;
+import ru.capri84.excelproject.model.Response;
+
 import java.io.IOException;
 
-class Main {
+public final class RequestUtils {
 
     private static final String NO_CONNECTION_MSG = "Подключение к интернету отсутствует. Данные взяты из ресурсов.";
     private static CreatePersons personCreator = new CreatePersons();
 
-    public static void main(String[] args) {
-        CreateXLSX.createXLSX();
-        CreateXLSX.createXlsxHeader();
-        CreatePDF.createPdf(CreatePDF.DEST_PDF);
-        CreatePDF.createPdfHeader();
-        makeRequest();
-    }
-
-    private static void makeRequest() {
+    public static void makeRequest() {
         RandomPersonApi randomPersonApi = RetrofitInstance.getRetrofitInstance().create(RandomPersonApi.class);
-        final String excludedData = "email,login,registered,phone,cell,id,picture,nat";
-        final String nat = "au,br,ch,de,dk,es,fi,fr,ie,no,nl,nz,tr,us";
         final String noinfo = "noinfo";
-        Call<model.Response> call = randomPersonApi.getPersonsData(personCreator.numOfPeople, excludedData, nat, noinfo);
+        Call<ru.capri84.excelproject.model.Response> call = randomPersonApi.getPersonsData(personCreator.numOfPeople,
+                APIUtils.buildStringFromEnum(APIUtils.ExcludedData.values()),
+                APIUtils.buildStringFromEnum(APIUtils.Nation.values()), noinfo);
 
-        call.enqueue(new Callback<model.Response>() {
+        call.enqueue(new Callback<Response>() {
             @Override
-            public void onResponse(Call<model.Response> call, Response<model.Response> response) {
+            public void onResponse(Call<Response> call, retrofit2.Response<Response> response) {
                 if (response.isSuccessful()) {
                     CreatePersons.apiResponse = response.body();
                     try {
@@ -51,7 +44,7 @@ class Main {
             }
 
             @Override
-            public void onFailure(Call<model.Response> call, Throwable t) {
+            public void onFailure(Call<ru.capri84.excelproject.model.Response> call, Throwable t) {
                 System.out.println(NO_CONNECTION_MSG);
                 try {
                     personCreator.buildPersonsList();

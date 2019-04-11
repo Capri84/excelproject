@@ -1,6 +1,6 @@
-package network;
+package ru.capri84.excelproject.network;
 
-import model.Response;
+import ru.capri84.excelproject.model.Response;
 import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Query;

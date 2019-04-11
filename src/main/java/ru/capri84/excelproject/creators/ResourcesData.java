@@ -1,4 +1,4 @@
-package creators;
+package ru.capri84.excelproject.creators;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -35,6 +35,8 @@ class ResourcesData {
             getResource("male/surnames_male.txt")).getPath();
     private static final String SURNAMES_FEMALE = Objects.requireNonNull(ResourcesData.class.getClassLoader().
             getResource("female/surnames_female.txt")).getPath();
+
+
 
     static List<String> getMaleSurnamesList() {
         List<String> maleSurnames = new ArrayList<>();
