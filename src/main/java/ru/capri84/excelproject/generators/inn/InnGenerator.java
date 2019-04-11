@@ -1,4 +1,4 @@
-package ru.capri84.excelproject.generators;
+package ru.capri84.excelproject.generators.inn;
 
 import ru.capri84.excelproject.utils.Utils;
 
@@ -23,9 +23,9 @@ public class InnGenerator {
      * This method generates digits 5-10 of INN
      */
     private static int[] generateMiddle() {
-        int[] innIndexArray = new int[GeneratorLimits.INN_INDEX_LENGTH.getValue()];
-        for (int i = 0; i < GeneratorLimits.INN_INDEX_LENGTH.getValue(); i++) {
-            innIndexArray[i] = Utils.random.nextInt(GeneratorLimits.DIGIT_BOUNDARY.getValue());
+        int[] innIndexArray = new int[InnLimits.getInnIndexLength()];
+        for (int i = 0; i < InnLimits.getInnIndexLength(); i++) {
+            innIndexArray[i] = Utils.random.nextInt(InnLimits.getDigitBoundaryValue());
         }
         return innIndexArray;
     }

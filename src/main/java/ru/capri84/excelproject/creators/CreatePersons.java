@@ -1,6 +1,14 @@
 package ru.capri84.excelproject.creators;
 
-import ru.capri84.excelproject.generators.*;
+import ru.capri84.excelproject.generators.Generatable;
+import ru.capri84.excelproject.generators.RandomLinesReader;
+import ru.capri84.excelproject.generators.birthdate.DateOfBirthGenerator;
+import ru.capri84.excelproject.generators.flat.FlatNumGenerator;
+import ru.capri84.excelproject.generators.house.HouseNumGenerator;
+import ru.capri84.excelproject.generators.inn.InnGenerator;
+import ru.capri84.excelproject.generators.people.NumOfPeopleGenerator;
+import ru.capri84.excelproject.generators.postcode.PostCodeGenerator;
+import ru.capri84.excelproject.generators.postcode.PostCodeLimits;
 import ru.capri84.excelproject.model.Person;
 import ru.capri84.excelproject.model.Response;
 
@@ -75,8 +83,8 @@ public class CreatePersons {
             inn = InnGenerator.generateINN();
 
             postCode = apiResponse.getResults().get(i).getLocation().getPostcode();
-            if (Integer.parseInt(postCode) < GeneratorLimits.POST_LOWER_LIMIT.getValue()
-                    || Integer.parseInt(postCode) > GeneratorLimits.POST_UPPER_LIMIT.getValue()) {
+            if (Integer.parseInt(postCode) < PostCodeLimits.getLowerLimitValue()
+                    || Integer.parseInt(postCode) > PostCodeLimits.getUpperLimitValue()) {
                 postCode = String.valueOf(postCodeGenerator.generate());
             }
 

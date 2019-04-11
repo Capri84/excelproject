@@ -19,8 +19,7 @@ public final class RequestUtils {
         RandomPersonApi randomPersonApi = RetrofitInstance.getRetrofitInstance().create(RandomPersonApi.class);
         final String noinfo = "noinfo";
         Call<ru.capri84.excelproject.model.Response> call = randomPersonApi.getPersonsData(personCreator.numOfPeople,
-                APIUtils.buildStringFromEnum(APIUtils.ExcludedData.values()),
-                APIUtils.buildStringFromEnum(APIUtils.Nation.values()), noinfo);
+                APIUtils.getExcludedData(), APIUtils.getNations(), noinfo);
 
         call.enqueue(new Callback<Response>() {
             @Override
